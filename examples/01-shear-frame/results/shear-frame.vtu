@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<VTKFile type="UnstructuredGrid" version="0.1" byte_order="LittleEndian" compressor="vtkZLibDataCompressor">
+<!--This file was created by meshio v5.3.4-->
+<UnstructuredGrid>
+<Piece NumberOfPoints="20" NumberOfCells="27">
+<Points>
+<DataArray type="Float64" Name="Points" NumberOfComponents="3" format="binary">
+AQAAAACAAADgAQAASQAAAA==eJyVzyEOACAMBEEkD0BUo1AVTZo0qeH/r8KAIazg5JzaUn5W59sFvIMPcAU3cAcP8Nze4L/99N4u4B18gCu4gTt4gOdcoqEKrQ==
+</DataArray>
+</Points>
+<Cells>
+<DataArray type="Int64" Name="connectivity" format="binary">
+AQAAAACAAACwAQAAVAAAAA==eJxd0DkWgCAQBFEQ9w2V+9+VwKmkOvlpv0rpX5aDLHKUk5zlIle5hXt4yFNe8pZVPvKVn2whPfhBD37Qgx/04Ac9+EEPftCDH/TgB1340wFydwIL
+</DataArray>
+<DataArray type="Int64" Name="offsets" format="binary">
+AQAAAACAAADYAAAAQQAAAA==eJwtxUEKQEAAAEBJkiRtkiRJ0iZJkv8/zcHMZdLklzl34dKVazcObt259+DRk2cvXr05evfh05dvP379AeU4AvU=
+</DataArray>
+<DataArray type="Int64" Name="types" format="binary">
+AQAAAACAAADYAAAADwAAAA==eJxjZoAA5mFGAwAkSABS
+</DataArray>
+</Cells>
+<PointData>
+<DataArray type="Float64" Name="Mode 1" NumberOfComponents="3" format="binary">
+AQAAAACAAADgAQAAZwAAAA==eJxjYMAObFK2L/z5fIs9urha3eMNMb2HMcStNZxVn/KfwRB/+9+jPnf3RQzx+8Eb9hslXsUQXx2vtSVk0w0M8d8vl51+dfAWhriWKutP5VV3MMQZZY/s/ud6F0McFxiu/gUAr0BMcw==
+</DataArray>
+<DataArray type="Float64" Name="Mode 2" NumberOfComponents="3" format="binary">
+AQAAAACAAADgAQAAaAAAAA==eJxjYMAOxB/rqxzxOW2PLn5l+yXZsytuYIh7yIfGrYm4iyH+K+i8487XtzDENxdFbHFSuYQhfrjPXJbn3SYM8X3Za1gOnT60H11cYfc9NubtVzHE07sbr6+LvoMhjgsMV/8CAP1aS7U=
+</DataArray>
+<DataArray type="Float64" Name="Mode 3" NumberOfComponents="3" format="binary">
+AQAAAACAAADgAQAAZwAAAA==eJxjYMAOApqTZa9fvbofXfzEB/57R5LvYog/W2bE4ip6CUO8pMF8nc7Bzfbo4mIuldlXZ97AED+g++d0RNAdDHGub6sdWfnPYIj7JLfeOVN9GMNeGzO+60U9tzDEcYHh6l8A/g9K3Q==
+</DataArray>
+<DataArray type="Float64" Name="Mode 4" NumberOfComponents="3" format="binary">
+AQAAAACAAADgAQAAZwAAAA==eJxjYMAO3FdFMJ9YccseXVzVk9PxR/lVDPHvSdq5d1MO70cXP9Bb3NnGfhdDvNm9Y4pEzhkM8cm/jPunyl3CMP/f5gat8st3MMR7S2cppwluwhB31mlQK5h9A8N8XGC4+hcAaqRHuQ==
+</DataArray>
+<DataArray type="Float64" Name="Mode 5" NumberOfComponents="3" format="binary">
+AQAAAACAAADgAQAAaAAAAA==eJxjYMAOTj2tYroTfXc/unihkrX7i6mbMcSNGJMddKru2KOLv5zQPzdf9zCG+J+vH+v2897GMOer8BZb+emnMcSVZu1QunDmBoY5Z6yevN6w+iKG+CcOlSTO6KsY5uACw9W/AJzJTbk=
+</DataArray>
+<DataArray type="Float64" Name="Mode 6" NumberOfComponents="3" format="binary">
+AQAAAACAAADgAQAAZwAAAA==eJxjYMAOZsTP6NQ5NMEeXfyQ7osS7YrtGOJbizVmKnle3I8urlOnOUlPGVPcjGVPyU2RmxjiZZu+7z8tuATD/CbTHRuVXxzEUD+xze31kTe3McRjzOtrpv9YjSGOCwxX/wIAguBMZw==
+</DataArray>
+<DataArray type="Float64" Name="Mode 7" NumberOfComponents="3" format="binary">
+AQAAAACAAADgAQAAaAAAAA==eJxjYMAOjn2I3aW08cZ+dPHPO5fc7v99wx5dfK9D7t1W9oUY6s/G167eEnINQ1ws0rw97NttDHMsly/0E/xxEEO9goBGcMPBixjiTZ/eLRPVu49hjtrH5/mb/c9gqMcFhqt/AfKmUeM=
+</DataArray>
+</PointData>
+</Piece>
+</UnstructuredGrid>
+</VTKFile>
