@@ -709,6 +709,10 @@ class Mode(object):
         self.eigenvalue = eigenvalue
         self.eigenvector = eigenvector
 
+        self.delta_frequency = 1
+        self.delta_damping = 1
+        self.delta_mac = 1
+
     @property
     def v(self):
         return self.eigenvector / np.linalg.norm(self.eigenvector, 2)
