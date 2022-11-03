@@ -8,7 +8,8 @@ __all__ = ["find_rayleigh_damping_coeffs", "get_frequency_vector",
            "modal_scale_factor", "modal_phase_collinearity",
            "mean_phase", "mean_phase_deviation", "find_psd_matrix",
            "find_positive_psd_matrix", "find_frf_matrix",
-           "accelerance2receptance", "receptance2accelerance", "Mode"]
+           "accelerance2receptance", "receptance2accelerance", "Mode", "find_nearest_neighbour",
+           "rel_diff_freq"]
 
 
 def find_rayleigh_damping_coeffs(w, damping_ratios):
@@ -811,7 +812,7 @@ class Mode(object):
         return cls.find_modes_from_ss(A, C, fs)
 
 
-def find_nearest_negihbour(home_mode: Mode, potential_neighbours: list) -> Mode:
+def find_nearest_neighbour(home_mode: Mode, potential_neighbours: list) -> Mode:
     """
     Find nearest neighbour to the home mode. Uses relative distance between frequencies as measure.
     Parameters
