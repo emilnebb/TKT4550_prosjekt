@@ -60,6 +60,9 @@ def f2w(f):
     "Convert frequency (Hz) to angular frequency (rad/s)"
     return f * (2*np.pi)
 
+def rel_diff_freq(f1, f2):
+    return np.abs(f2-f1)/(np.max([np.abs(f1), np.abs(f2)]))
+
 
 def modal_scale_factor(u, v):
     """Determine the scale factor between u and v
