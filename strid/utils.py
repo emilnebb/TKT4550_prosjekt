@@ -805,3 +805,26 @@ class Mode(object):
         """
         A, B, C, D = rmfd2ss(N, D)
         return cls.find_modes_from_ss(A, C, fs)
+
+
+def find_nearest_negihbour(home_mode: Mode, potential_neighbours: list) -> Mode:
+    """
+    Find nearest neighbour to the home mode. Uses relative distance between frequencies as measure.
+    Parameters
+    ----------
+    home_mode: the mode we want to find the nearest neighbour to, type Mode
+    potential_neighbours: list of modes with candidate of neighbours
+
+    Returns
+    -------
+    nearest neighbour,type Mode
+    """
+
+    neighbour = potential_neighbours[0]
+
+    for mode in range(1, len(potential_neighbours)):
+        if (rel_diff_freq(home_mode.f, potential_neighbours[mode].f) <
+        rel_diff_freq(home_mode.f, neighbour.f)):
+            neighbour = potential_neighbours[mode]
+
+    return neighbour
