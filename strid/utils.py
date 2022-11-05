@@ -714,6 +714,8 @@ class Mode(object):
         self.delta_damping = 1
         self.delta_mac = 1
 
+        self.mode_type = None #0= physical mode, 1= mathematical mode, None= not assigned
+
     @property
     def v(self):
         return self.eigenvector / np.linalg.norm(self.eigenvector, 2)
