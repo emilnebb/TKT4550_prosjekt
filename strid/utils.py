@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import numpy
 import numpy as np
 import scipy.signal
 
@@ -836,3 +837,28 @@ def find_nearest_neighbour(home_mode: Mode, potential_neighbours: list) -> Mode:
             neighbour = potential_neighbours[mode]
 
     return neighbour
+
+def distance_matrix(modes: np.ndarray) -> np.ndarray:
+    """
+    Computes the distance matrix between structural modes.
+    The distance between two modes i and j is defined as:
+    dc_ij = delta_eigenvalues_ij + (1 - MAC_ij)
+    Parameters
+    ----------
+    modes: 1d numpy array with elements of class Mode
+
+    Returns: 2d numpy array that is a distance matrix
+    -------
+
+    """
+    #Preallocatig matrix to store the distances in
+    dist_matrix = np.zeros_like((modes.shape[0], modes.shape[0]))
+
+    for i in range(0, dist_matrix.shape[0]):
+        for j in range(0, dist_matrix.shape[1]):
+            #Computing the distance at each element
+            dist_matrix[i,j] = np.abs(modes[i].eigenvalue - modes[j].eigenvalue) + \
+                               (1 - modal_assurance_criterion(modes[i].v, modes[j].v))
+
+
+    return dist_matrix
