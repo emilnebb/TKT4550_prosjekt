@@ -852,10 +852,10 @@ def distance_matrix(modes: np.ndarray) -> np.ndarray:
 
     """
     #Preallocatig matrix to store the distances in
-    dist_matrix = np.zeros_like((modes.shape[0], modes.shape[0]))
+    dist_matrix = np.zeros((modes.shape[0], modes.shape[0]))
 
-    for i in range(0, dist_matrix.shape[0]):
-        for j in range(0, dist_matrix.shape[1]):
+    for i in range(0, dist_matrix.shape[0]-1):
+        for j in range(0, dist_matrix.shape[1]-1):
             #Computing the distance at each element
             dist_matrix[i,j] = np.abs(modes[i].eigenvalue - modes[j].eigenvalue) + \
                                (1 - modal_assurance_criterion(modes[i].v, modes[j].v))
