@@ -62,6 +62,7 @@ def f2w(f):
     return f * (2*np.pi)
 
 def rel_diff_freq(f1, f2):
+    "Find relative difference between two different frequencies"
     return np.abs(f2-f1)/(np.max([np.abs(f1), np.abs(f2)]))
 
 
