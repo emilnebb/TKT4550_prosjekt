@@ -310,3 +310,46 @@ class StabilizationDiagram:
                                        and (1-modal_assurance_criterion(mode.v, mode_prev.v) < tol["mac"])
                                        for mode_prev in modes[order_prev]])]
         return stable_modes
+
+    def plot_clusters(self, modes):
+        """Plot modes in the stabilization diagram
+
+        This method takes in a dict where the key is the
+        order of the model and the value is a list of modes
+        pertaining to the model order. The `check_stability`
+        method of the mode is used to determine whether a mode
+        is considered to be _stable_ or not.
+
+        Arguments
+        ---------
+        modes : dict
+            Dictionary where the key is the model order and
+            the value is a list of strid.Mode instances.
+
+        See Also
+        --------
+        filter_modes
+            Method to filter out modes not relevant for further analysis and
+            thus not plotted in stabilization diagram.
+        find_stable_modes
+            Method to classify stable modes.
+        """
+        filtered_modes = self.filter_modes(modes)
+        stable_modes = self.find_stable_modes(filtered_modes)
+        orders = sorted([*modes.keys()])
+        for order in orders:
+            for mode in modes[order]:
+                if mode not in filtered_modes[order]:
+                    continue
+                if mode in stable_modes[order]:
+                    color = self.stable_color
+                else:
+                    color = self.stable_color
+                lines = self.axes_plot.plot(
+                    mode.f, order,
+                    self.marker,
+                    color=color,
+                    ms=self.markersize,
+                    picker=True,
+                    pickradius=self.pickradius)
+                lines[0].mode = mode
