@@ -2,6 +2,7 @@
 import numpy
 import numpy as np
 import scipy.signal
+from time import time
 
 
 __all__ = ["find_rayleigh_damping_coeffs", "get_frequency_vector",
@@ -852,6 +853,8 @@ def distance_matrix(modes: np.ndarray) -> np.ndarray:
     -------
 
     """
+    #Meassuring the computational time
+    t0 = time()
     #Preallocatig matrix to store the distances in
     dist_matrix = np.zeros((modes.shape[0], modes.shape[0]))
 
@@ -861,5 +864,8 @@ def distance_matrix(modes: np.ndarray) -> np.ndarray:
             if i != j:
                 dist_matrix[i,j] = (1 - modal_assurance_criterion(modes[i].v, modes[j].v))
                         #np.abs(modes[i].eigenvalue - modes[j].eigenvalue)
+
+    t1 = time()
+    print("Distance matrix computational time = " + str(t1-t0))
 
     return dist_matrix
