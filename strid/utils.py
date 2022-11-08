@@ -860,12 +860,14 @@ def distance_matrix(modes: np.ndarray) -> np.ndarray:
 
     for i in range(0, dist_matrix.shape[0]-1):
         for j in range(0, dist_matrix.shape[1]-1):
-            #Computing the distance at each element
+            # Computing the distance at each element
+            eigen_i = np.sqrt(modes[i].eigenvalue ** 2)
+            eigen_j = np.sqrt(modes[j].eigenvalue ** 2)
             if i != j:
-                dist_matrix[i,j] = (1 - modal_assurance_criterion(modes[i].v, modes[j].v))
-                        #np.abs(modes[i].eigenvalue - modes[j].eigenvalue)
+                dist_matrix[i, j] = (np.abs((eigen_i - eigen_j)) / np.max([eigen_i, eigen_j])) + (
+                            1 - modal_assurance_criterion(modes[i].v, modes[j].v))
 
     t1 = time()
-    print("Distance matrix computational time = " + str(t1-t0))
+    print("Distance matrix computational time = " + str(t1-t0) + "sec")
 
     return dist_matrix
