@@ -356,7 +356,7 @@ class StabilizationDiagram:
                 if mode in stable_modes[order]:
                     color = color_values[mode.cluster]
                 else:
-                    color = color_values[mode.cluster]
+                    color = self.unstable_color
                 lines = self.axes_plot.plot(
                     mode.f, order,
                     self.marker,
