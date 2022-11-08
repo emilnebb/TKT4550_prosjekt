@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 from .utils import modal_assurance_criterion
 
+import colordict
+color_values = list(colordict.ColorDict(norm=1).values())
+
 __all__ = ["StabilizationDiagram", ]
 
 
@@ -316,9 +319,14 @@ class StabilizationDiagram:
 
         This method takes in a dict where the key is the
         order of the model and the value is a list of modes
-        pertaining to the model order. The `check_stability`
-        method of the mode is used to determine whether a mode
-        is considered to be _stable_ or not.
+        pertaining to the model order. No stability is checked
+        in this method.
+        Each mode is labeled with a color corresponding to its
+        designated cluster. This method will only work if the number
+        of clusters are less than or equal to the length of the color
+        list, which is 302. Can be solved for an arbitrary number
+        of clusters with modulus, resulting in dublicates of cluster
+        colors.
 
         Arguments
         ---------
@@ -334,6 +342,10 @@ class StabilizationDiagram:
         find_stable_modes
             Method to classify stable modes.
         """
+        #Todo: make the method work for an arbitrary number of clusters
+
+        print("Length of color list: " + str(len(color_values)))
+
         filtered_modes = self.filter_modes(modes)
         stable_modes = self.find_stable_modes(filtered_modes)
         orders = sorted([*modes.keys()])
@@ -342,9 +354,9 @@ class StabilizationDiagram:
                 if mode not in filtered_modes[order]:
                     continue
                 if mode in stable_modes[order]:
-                    color = self.stable_color
+                    color = color_values[mode.cluster]
                 else:
-                    color = self.stable_color
+                    color = color_values[mode.cluster]
                 lines = self.axes_plot.plot(
                     mode.f, order,
                     self.marker,
