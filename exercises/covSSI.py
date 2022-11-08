@@ -17,9 +17,6 @@ def covSSI(path: str) -> (strid.CovarianceDrivenStochasticSID, dict):
     data = np.load(path)
     y = data["y"]
     fs = data["fs"]
-    true_f = data["true_frequencies"]
-    true_xi = data["true_damping"]
-    true_modeshapes = data["true_modeshapes"]
 
     ssid = strid.CovarianceDrivenStochasticSID(y, fs)
 
