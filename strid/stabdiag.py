@@ -346,21 +346,16 @@ class StabilizationDiagram:
 
         print("Length of color list: " + str(len(color_values)))
 
-        filtered_modes = self.filter_modes(modes)
-        stable_modes = self.find_stable_modes(filtered_modes)
+        filtered_modes = self.filter_modes(modes) #this removes modes with negative frequencies
         orders = sorted([*modes.keys()])
         for order in orders:
             for mode in modes[order]:
                 if mode not in filtered_modes[order]:
                     continue
-                if mode in stable_modes[order]:
-                    color = color_values[mode.cluster]
-                else:
-                    color = self.unstable_color
                 lines = self.axes_plot.plot(
                     mode.f, order,
                     self.marker,
-                    color=color,
+                    color=color_values[mode.cluster],
                     ms=self.markersize,
                     picker=True,
                     pickradius=self.pickradius)

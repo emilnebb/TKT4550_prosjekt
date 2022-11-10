@@ -39,16 +39,14 @@ class HierarchicalModes:
         #Todo: change method description
 
         clustered_modes = defaultdict(list)
-        filtered_modes = self.stabdiag.filter_modes(modes)
-        #filtered_modes = self.filter_modes(modes)
-        stable_modes = self.stabdiag.find_stable_modes(filtered_modes)
+
+        filtered_modes = self.stabdiag.filter_modes(modes) #this removes modes with negative frequencies
         orders = sorted([*modes.keys()])
         for order in orders:
             for mode in modes[order]:
                 if mode not in filtered_modes[order]:
                     continue
-                if mode in stable_modes[order]:
-                    clustered_modes[mode.cluster].append(mode)
+                clustered_modes[mode.cluster].append(mode)
 
         return dict(clustered_modes)
 
