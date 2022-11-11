@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-import numpy
 import numpy as np
 import scipy.signal
-from time import time
+
 
 
 __all__ = ["find_rayleigh_damping_coeffs", "get_frequency_vector",
@@ -10,8 +9,7 @@ __all__ = ["find_rayleigh_damping_coeffs", "get_frequency_vector",
            "modal_scale_factor", "modal_phase_collinearity",
            "mean_phase", "mean_phase_deviation", "find_psd_matrix",
            "find_positive_psd_matrix", "find_frf_matrix",
-           "accelerance2receptance", "receptance2accelerance", "Mode", "find_nearest_neighbour",
-           "rel_diff_freq"]
+           "accelerance2receptance", "receptance2accelerance", "Mode"]
 
 
 def find_rayleigh_damping_coeffs(w, damping_ratios):
@@ -62,10 +60,6 @@ def w2f(w):
 def f2w(f):
     "Convert frequency (Hz) to angular frequency (rad/s)"
     return f * (2*np.pi)
-
-def rel_diff_freq(f1, f2):
-    "Find relative difference between two different frequencies"
-    return np.abs(f2-f1)/(np.max([np.abs(f1), np.abs(f2)]))
 
 
 def modal_scale_factor(u, v):
@@ -816,58 +810,3 @@ class Mode(object):
         """
         A, B, C, D = rmfd2ss(N, D)
         return cls.find_modes_from_ss(A, C, fs)
-
-
-def find_nearest_neighbour(home_mode: Mode, potential_neighbours: list) -> Mode:
-    """
-    Find nearest neighbour to the home mode. Uses relative distance between frequencies as measure.
-    Parameters
-    ----------
-    home_mode: the mode we want to find the nearest neighbour to, type Mode
-    potential_neighbours: list of modes with candidate of neighbours
-
-    Returns
-    -------
-    nearest neighbour,type Mode
-    """
-
-    neighbour = potential_neighbours[0]
-
-    for mode in range(1, len(potential_neighbours)):
-        if (rel_diff_freq(home_mode.f, potential_neighbours[mode].f) <
-        rel_diff_freq(home_mode.f, neighbour.f)):
-            neighbour = potential_neighbours[mode]
-
-    return neighbour
-
-def distance_matrix(modes: np.ndarray) -> np.ndarray:
-    """
-    Computes the distance matrix between structural modes.
-    The distance between two modes i and j is defined as:
-    dc_ij = delta_eigenvalues_ij + (1 - MAC_ij)
-    Parameters
-    ----------
-    modes: 1d numpy array with elements of class Mode
-
-    Returns: 2d numpy array that is a distance matrix
-    -------
-
-    """
-    #Meassuring the computational time
-    t0 = time()
-    #Preallocatig matrix to store the distances in
-    dist_matrix = np.zeros((modes.shape[0], modes.shape[0]))
-
-    for i in range(0, dist_matrix.shape[0]-1):
-        for j in range(0, dist_matrix.shape[1]-1):
-            # Computing the distance at each element
-            eigen_i = np.sqrt(modes[i].eigenvalue ** 2)
-            eigen_j = np.sqrt(modes[j].eigenvalue ** 2)
-            if i != j:
-                dist_matrix[i, j] = (np.abs((eigen_i - eigen_j)) / np.max([eigen_i, eigen_j])) + (
-                            1 - modal_assurance_criterion(modes[i].v, modes[j].v))
-
-    t1 = time()
-    print("Distance matrix computational time = " + str(t1-t0) + "sec")
-
-    return dist_matrix
