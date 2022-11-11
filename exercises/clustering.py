@@ -165,7 +165,7 @@ class Cluster:
 
         self.structural_modes_dict = structural_modes_dict
 
-        # Making a new stabilization diagram with the physical modes
+        # Making a new stabilization diagram with the structural modes
         stabdiag = strid.StabilizationDiagram()
         stabdiag.plot_clusters(self.structural_modes_dict)
 
