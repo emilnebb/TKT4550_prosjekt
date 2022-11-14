@@ -29,8 +29,8 @@ class ModePicker(object):
     >>> import matplotlib.pyplot as plt
     >>> import strid
     >>> picker = strid.stabdiag.ModePicker()
-    >>> fig = plt.figure()
-    >>> fig.canvas.mpl_connect('pick_event', picker)
+    >>> figures = plt.figure()
+    >>> figures.canvas.mpl_connect('pick_event', picker)
 
     """
     picked_edgecolor = 'k'

@@ -257,7 +257,7 @@ def find_positive_psd_matrix(x, y, nfft=2**9, window="rectangular"):
     """Calculate positive lag PSD matrix
 
     Calculate the positive lag PSD matrix as per [Cauberghe2004] (pg.
-    47, fig. 3.8). Useful in combined deterministic-stochastic or
+    47, figures. 3.8). Useful in combined deterministic-stochastic or
     stochastic frequency domain modal extraction methods such as LSCF
     and pLSCF.
 
