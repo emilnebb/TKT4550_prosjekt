@@ -5,6 +5,7 @@ import scipy.signal
 import functions as fun
 from sklearn.cluster import KMeans
 from sklearn.cluster import AgglomerativeClustering
+from collections import defaultdict
 
 # https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html#sklearn.cluster.KMeans
 
@@ -85,7 +86,7 @@ class Cluster:
             distance = fun.distance_matrix_eigen(self.physical_modes_list)
 
         # Check the integrity of the distance matrix
-        print("Chck integrity of the distane matrix:")
+        print("Check integrity of the distane matrix:")
         print("Max value = " + str(np.max(distance)))
         print("Mean value = " + str(np.mean(distance)))
         print("Min value = " + str(np.min(distance)))
@@ -165,44 +166,57 @@ class Cluster:
 
         self.structural_modes_dict = structural_modes_dict
 
-        # Making a new stabilization diagram with the structural modes
-        stabdiag = strid.StabilizationDiagram()
-        stabdiag.plot_clusters(self.structural_modes_dict)
 
-        f, psd = self.ssid.psdy(nperseg=2 ** 10)
+    def extract_modal_features(self, stabdiag):
+        """
+        Extract the modal features of each detected mode as the average of all
+        the components' features within each hierarchical cluster. Requires
+        that run_clustering is called in advance such that self.structural_modes_dict
+        is assigned a dictionry with modes.
+        Parameters
+        ----------
+        stabdiag: object of class StabilizationDiagram. Dont actually need the object,
+                but utilize the function filter_modes() within its class.
 
-        stabdiag.axes_psd.semilogy(f, np.trace(np.abs(psd)), color=(0., 0., 0., .5), lw=.3)
+        Returns
+            est_frequencies: 1a np.array with estimated frequencies
+            est_damping: 1d np.array with estimated damping ratios
+            est_modeshapes: 2d np.aray with estimated mode shapes
+        -------
 
-        #Task 4.2 - Extract modal features of each detected mode as the average of all
-        # the components’ features within each hierarchical cluster.
-
+        """
         clustered_modes = fun.HierarchicalModes(stabdiag)
 
-        modes_in_clusters = clustered_modes.clusters_dict(structural_modes_dict)
+        modes_in_clusters = clustered_modes.clusters_dict(self.structural_modes_dict)
 
-        # Verfying numbers of clusters up against stabilization diagram
-        assert len(modes_in_clusters) == 8, "Could not identify the correct number of structural modes"
-        hierarchies = (list(modes_in_clusters.values()))
+        hierarchies = sorted([*modes_in_clusters.keys()])
+        clusters = defaultdict(list)
 
-        est_frequencies = np.zeros(len(hierarchies))
-        est_damping = np.zeros(len(hierarchies))
-        est_modal_shapes = np.zeros((len(hierarchies), len(hierarchies)))
-
-        for hier in hierarchies:
+        for hierarchy in hierarchies:
             frequencies_in_hierarchy = []
             damping_in_hierarchy = []
             mode_shapes_in_hierarchy = []
-            for element in hier:
+            for element in modes_in_clusters[hierarchy]:
                 frequencies_in_hierarchy.append(element.f)
                 damping_in_hierarchy.append(element.xi)
                 mode_shapes_in_hierarchy.append(element.v)
 
-            est_frequencies[hierarchies.index(hier)] = np.mean(np.array(frequencies_in_hierarchy))
-            est_damping[hierarchies.index(hier)] = np.mean(np.array(damping_in_hierarchy))
-            est_modal_shapes[:, hierarchies.index(hier)] = np.mean(np.array(mode_shapes_in_hierarchy), axis=0)
+            f_mean = np.mean(np.array(frequencies_in_hierarchy))
+            xi_mean = np.mean(np.array(damping_in_hierarchy))
+            modal_shapes_mean = np.mean(np.array(mode_shapes_in_hierarchy), axis=0)
 
-        est_frequencies = np.sort(est_frequencies)
-        est_damping = np.sort(est_damping)
-        #TODO: modal shapes needs to be sorted in order to be compared with the correct ground truth
+            clusters[hierarchy] = [f_mean, xi_mean, modal_shapes_mean]
 
-        return est_frequencies, est_damping, est_modal_shapes
+        clustered_features = dict(clusters)
+
+        # Sort the clusters by frequency to group into modes
+        sorted_features_dict = {cluster: mode for cluster, mode in
+                                sorted(clustered_features.items(), key=lambda item: item[1][0])}
+
+        sorted_features_list = np.array(list(sorted_features_dict.values()))
+
+        est_frequencies = sorted_features_list[:, 0]
+        est_damping = sorted_features_list[:, 1]
+        est_modeshapes = sorted_features_list[:, 2]
+
+        return est_frequencies, est_damping, est_modeshapes
