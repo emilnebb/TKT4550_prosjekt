@@ -239,6 +239,8 @@ class StabilizationDiagram:
                     pickradius=self.pickradius)
                 lines[0].mode = mode
 
+        return filtered_modes
+
     def filter_modes(self, modes):
         """Filter out modes not relevant for further analysis.
 
