@@ -316,7 +316,58 @@ class StabilizationDiagram:
                                        for mode_prev in modes[order_prev]])]
         return stable_modes
 
-    def plot_clusters(self, modes):
+    def plot_partition_cluster(self, modes):
+        """Plot modes in the stabilization diagram
+
+        This method takes in a dict where the key is the
+        order of the model and the value is a list of modes
+        pertaining to the model order. No stability is checked
+        in this method.
+        Each mode is labeled with a color corresponding to its
+        designated cluster. This method will only work if the number
+        of clusters are less than or equal to the length of the color
+        list, which is 302. Can be solved for an arbitrary number
+        of clusters with modulus, resulting in dublicates of cluster
+        colors.
+
+        Arguments
+        ---------
+        modes : dict
+            Dictionary where the key is the model order and
+            the value is a list of strid.Mode instances.
+
+        See Also
+        --------
+        filter_modes
+            Method to filter out modes not relevant for further analysis and
+            thus not plotted in stabilization diagram.
+        find_stable_modes
+            Method to classify stable modes.
+        """
+        #Todo: make the method work for an arbitrary number of clusters
+
+        print("Length of color list: " + str(len(color_values)))
+
+        filtered_modes = self.filter_modes(modes) #this removes modes with negative frequencies
+        orders = sorted([*modes.keys()])
+        for order in orders:
+            for mode in modes[order]:
+                #if mode not in filtered_modes[order]:
+                #    continue
+                if mode.physical == 0:
+                    color = (0, 0, 1, .3)
+                else:
+                    color = self.unstable_color
+                lines = self.axes_plot.plot(
+                    mode.f, order,
+                    self.marker,
+                    color=color,
+                    ms=self.markersize,
+                    picker=True,
+                    pickradius=self.pickradius)
+                lines[0].mode = mode
+
+    def plot_hierarchies(self, modes):
         """Plot modes in the stabilization diagram
 
         This method takes in a dict where the key is the
