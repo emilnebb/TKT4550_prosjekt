@@ -98,7 +98,7 @@ class Cluster:
 
         y_hc = model.fit_predict(distance)
         model = model.fit(distance)
-        print((y_hc))
+        #print((y_hc))
         print(np.max(y_hc))
 
         hierarchy = y_hc.tolist()
