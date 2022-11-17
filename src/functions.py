@@ -168,8 +168,8 @@ def distance_matrix(modes: np.ndarray) -> np.ndarray:
     #Preallocatig matrix to store the distances in
     dist_matrix = np.zeros((modes.shape[0], modes.shape[0]))
 
-    for i in range(0, dist_matrix.shape[0]-1):
-        for j in range(0, dist_matrix.shape[1]-1):
+    for i in range(0, dist_matrix.shape[0]):
+        for j in range(0, dist_matrix.shape[1]):
             # Computing the distance at each element
             eigen_i = np.sqrt(modes[i].eigenvalue ** 2)
             eigen_j = np.sqrt(modes[j].eigenvalue ** 2)
@@ -202,8 +202,8 @@ def distance_matrix_mac(modes: np.ndarray) -> np.ndarray:
     #Preallocatig matrix to store the distances in
     dist_matrix = np.zeros((modes.shape[0], modes.shape[0]))
 
-    for i in range(0, dist_matrix.shape[0]-1):
-        for j in range(0, dist_matrix.shape[1]-1):
+    for i in range(0, dist_matrix.shape[0]):
+        for j in range(0, dist_matrix.shape[1]):
             # Computing the distance at each element
             if i != j:
                 dist_matrix[i, j] = (1 - strid.modal_assurance_criterion(modes[i].v, modes[j].v))
@@ -231,8 +231,8 @@ def distance_matrix_eigen(modes: np.ndarray) -> np.ndarray:
     #Preallocatig matrix to store the distances in
     dist_matrix = np.zeros((modes.shape[0], modes.shape[0]))
 
-    for i in range(0, dist_matrix.shape[0]-1):
-        for j in range(0, dist_matrix.shape[1]-1):
+    for i in range(0, dist_matrix.shape[0]):
+        for j in range(0, dist_matrix.shape[1]):
             # Computing the distance at each element
             eigen_i = np.sqrt(modes[i].eigenvalue ** 2)
             eigen_j = np.sqrt(modes[j].eigenvalue ** 2)
