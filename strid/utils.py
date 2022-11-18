@@ -712,7 +712,8 @@ class Mode(object):
         self.delta_mac = 1
 
         self.physical = None #0= physical mode, 1= mathematical mode, None= not assigned
-        self.cluster = None
+        self.cluster = None #int, label of the hierarchy
+        self.structural = None #0= structural mode, 1= non-structural mode, None= not assigned
 
     @property
     def v(self):
