@@ -1,7 +1,5 @@
 import numpy as np
 import strid
-import matplotlib.pyplot as plt
-import scipy.signal
 import functions as fun
 from sklearn.cluster import KMeans
 from sklearn.cluster import AgglomerativeClustering
@@ -18,8 +16,8 @@ class Cluster:
     def __init__(self, modes: dict,
                  ssid: strid.CovarianceDrivenStochasticSID,
                  linkage: str,
-                 distance_matrix = "combined",
-                 d_c = 0.04,
+                 d_c: float,
+                 distance_matrix: str,
                  visualize = False):
 
         self.modes = modes
@@ -34,6 +32,12 @@ class Cluster:
 
 
     def run_clustering(self):
+        """
+        Runs the three layer clustering model of k-means -> agglomerative
+        -> k-means on the output from cov-SSI. Saves intermediate values
+        to the cluster object for plotting, performance measurement, etc.
+
+        """
 
         #Task 2.1 - Find relative difference
         difference = fun.rel_difference(self.modes)
@@ -109,18 +113,6 @@ class Cluster:
             num_modes_in_hierarchy[i, 1] = hierarchy.count(i)
             num_modes_in_hierarchy[i, 2] = i
 
-        structural_coordinates = []
-        non_structural_coordinates = []
-
-        for i in range(0, len(y_hc)):
-            if y_hc[i] == 1:
-                structural_coordinates.append(self.physical_coordinates[i, :])
-            else:
-                non_structural_coordinates.append(self.physical_coordinates[i, :])
-
-        structural_coordinates = np.array(structural_coordinates)
-        non_structural_coordinates = np.array(non_structural_coordinates)
-
         # Assign hierarchy to each mode
         count = 0
         for order in range(49, 5, -1):
@@ -139,7 +131,7 @@ class Cluster:
 
         # Pick the label with lowest occurence
         labels2 = labels2.tolist()
-        structural_label = None
+
         if (labels2.count(0) > labels2.count(1)):
             structural_label = 1
         else:
@@ -151,23 +143,23 @@ class Cluster:
             if (labels2[i] == structural_label):
                 structural_hierarchies.append(i)
 
-
         # Assign hierarchy to each mode
         structural_modes_dict = {}
         for order in range(49, 5, -1):
-            modes_of_order = physical_modes_dict[order]
             structural_modes_in_order = []
-            for mode in modes_of_order:
-                # print(mode.f)
+            for mode in physical_modes_dict[order]:
                 if mode.cluster in structural_hierarchies:
+                    mode.structural = 0
                     structural_modes_in_order.append(mode)
+                else:
+                    mode.structural = 1
 
             structural_modes_dict[order] = structural_modes_in_order
 
         self.structural_modes_dict = structural_modes_dict
 
 
-    def extract_modal_features(self, stabdiag):
+    def extract_modal_features(self, stabdiag: strid.stabdiag.StabilizationDiagram):
         """
         Extract the modal features of each detected mode as the average of all
         the components' features within each hierarchical cluster. Requires
