@@ -1,15 +1,10 @@
 import numpy as np
 import strid
+from time import time
 import functions as fun
 from sklearn.cluster import KMeans
 from sklearn.cluster import AgglomerativeClustering
 from collections import defaultdict
-
-# https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html#sklearn.cluster.KMeans
-
-# https://scikit-learn.org/stable/modules/generated/sklearn.cluster.AgglomerativeClustering.html
-# Plotting dendogram: https://scikit-learn.org/stable/auto_examples/cluster/plot_agglomerative_dendrogram.html
-# https://www.youtube.com/watch?v=v7oLMvcxgFY&ab_channel=KindsonTheTechPro
 
 class Cluster:
 
@@ -18,6 +13,7 @@ class Cluster:
                  linkage: str,
                  d_c: float,
                  distance_matrix: str,
+                 power: float,
                  visualize = False):
 
         self.modes = modes
@@ -29,6 +25,7 @@ class Cluster:
         self.physical_coordinates = None
         self.mathematical_coordinates = None
         self.structural_modes_dict = None
+        self.power = power
 
 
     def run_clustering(self):
@@ -38,9 +35,10 @@ class Cluster:
         to the cluster object for plotting, performance measurement, etc.
 
         """
+        t0 = time()
 
         #Task 2.1 - Find relative difference
-        difference = fun.rel_difference(self.modes)
+        difference = fun.rel_difference(self.modes, self.power)
 
         #Check relative difference integrity
         assert np.max(difference) <= 1, "Non-valid relative difference"
@@ -157,6 +155,9 @@ class Cluster:
             structural_modes_dict[order] = structural_modes_in_order
 
         self.structural_modes_dict = structural_modes_dict
+
+        t1 = time()
+        print("Clustering algorithm computational time = " + str(t1-t0) + " sec")
 
 
     def extract_modal_features(self, stabdiag: strid.stabdiag.StabilizationDiagram):
