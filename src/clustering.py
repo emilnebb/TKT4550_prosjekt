@@ -14,15 +14,16 @@ class Cluster:
                  d_c: float,
                  distance_matrix: str,
                  power: float,
-                 visualize = False):
+                 neighbour = True):
 
         self.modes = modes
         self.ssid = ssid
         self.distance_matrix = distance_matrix
         self.d_c = d_c
         self.linkage = linkage
-        self.visualize = visualize
+        self.neighbour = neighbour
         self.physical_coordinates = None
+        self.physical_modes_list = None
         self.mathematical_coordinates = None
         self.structural_modes_dict = None
         self.power = power
@@ -37,45 +38,8 @@ class Cluster:
         """
         t0 = time()
 
-        #Task 2.1 - Find relative difference
-        difference = fun.rel_difference(self.modes, self.power)
-
-        #Check relative difference integrity
-        assert np.max(difference) <= 1, "Non-valid relative difference"
-
-        #Task 2.1 - Using K-means clustering to separate all the poles into two groups
-        kmeans = KMeans(n_clusters=2, random_state=0).fit(difference)
-        labels1 = kmeans.labels_
-
-        # Assign label to each mode
-        physical_coordinates = []
-        mathematical_coordinates = []
-        count = 0
-        physical_modes_dict = {}
-        physical_modes_list = []
-        num_modes = 0
-        for order in range(49, 5, -1):
-            modes_of_order = self.modes[order]
-            # print("Order: " + str(order))
-            physical_modes_in_order = []
-            for mode in modes_of_order:
-                mode.physical = labels1[count]
-                if (mode.physical == 0):
-                    physical_modes_in_order.append(mode)
-                    physical_modes_list.append(mode)
-                    physical_coordinates.append([mode.delta_frequency, mode.delta_damping, mode.delta_mac])
-                else:
-                    mathematical_coordinates.append([mode.delta_frequency, mode.delta_damping, mode.delta_mac])
-                count += 1
-            physical_modes_dict[order] = physical_modes_in_order
-            num_modes += len(physical_modes_in_order)
-
-        self.physical_coordinates = np.array(physical_coordinates)
-        self.mathematical_coordinates = np.array(mathematical_coordinates)
-        self.physical_modes_list = np.array(physical_modes_list)
-
-        print("Number of physical modes = " + str(self.physical_coordinates.shape[0]))
-        print("Number of mathematical modes = " + str(self.mathematical_coordinates.shape[0]))
+        #Task 2
+        physical_modes_dict = self.kmeans_1()
 
         #Task 3.1 - Detect structural modes by hierarchical clustering
 
@@ -213,3 +177,46 @@ class Cluster:
         est_modeshapes = sorted_features_list[:, 2]
 
         return est_frequencies, est_damping, est_modeshapes
+
+    def kmeans_1(self):
+        # Task 2.1 - Find relative difference
+        difference = fun.rel_difference(self.modes, self.power, neighbour=self.neighbour)
+
+        # Check relative difference integrity
+        assert np.max(difference) <= 1, "Non-valid relative difference"
+
+        # Task 2.1 - Using K-means clustering to separate all the poles into two groups
+        kmeans = KMeans(n_clusters=2, random_state=0).fit(difference)
+        labels1 = kmeans.labels_
+
+        # Assign label to each mode
+        physical_coordinates = []
+        mathematical_coordinates = []
+        count = 0
+        physical_modes_dict = {}
+        physical_modes_list = []
+        num_modes = 0
+        for order in range(49, 5, -1):
+            modes_of_order = self.modes[order]
+            # print("Order: " + str(order))
+            physical_modes_in_order = []
+            for mode in modes_of_order:
+                mode.physical = labels1[count]
+                if (mode.physical == 0):
+                    physical_modes_in_order.append(mode)
+                    physical_modes_list.append(mode)
+                    physical_coordinates.append([mode.delta_frequency, mode.delta_damping, mode.delta_mac])
+                else:
+                    mathematical_coordinates.append([mode.delta_frequency, mode.delta_damping, mode.delta_mac])
+                count += 1
+            physical_modes_dict[order] = physical_modes_in_order
+            num_modes += len(physical_modes_in_order)
+
+        self.physical_coordinates = np.array(physical_coordinates)
+        self.mathematical_coordinates = np.array(mathematical_coordinates)
+        self.physical_modes_list = np.array(physical_modes_list)
+
+        print("Number of physical modes = " + str(self.physical_coordinates.shape[0]))
+        #print("Number of mathematical modes = " + str(self.mathematical_coordinates.shape[0]))
+
+        return physical_modes_dict

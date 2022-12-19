@@ -90,15 +90,40 @@ def find_nearest_neighbour(home_mode: strid.Mode, potential_neighbours: list) ->
 
     return neighbour
 
+def find_nearest_neighbour_mac(home_mode: strid.Mode, potential_neighbours: list) -> strid.Mode:
+    """
+    Find nearest neighbour to the home mode. Uses relative distance between mode shapes as measure.
+    Parameters
+    ----------
+    home_mode: the mode we want to find the nearest neighbour to, type Mode
+    potential_neighbours: list of modes with candidate of neighbours
 
-def rel_difference(modes: dict, power: float) -> np.ndarray:
+    Returns
+    -------
+    nearest neighbour,type Mode
+    """
+    #TODO: this function doesn't work properly, needs debugging
+
+    neighbour = potential_neighbours[0]
+
+    for mode in range(1, len(potential_neighbours)):
+        if (1-strid.utils.modal_assurance_criterion(home_mode,potential_neighbours[mode])) < \
+                (1-strid.utils.modal_assurance_criterion(home_mode, neighbour)):
+            neighbour = potential_neighbours[mode]
+
+    return neighbour
+
+
+def rel_difference(modes: dict, power: float, neighbour: bool) -> np.ndarray:
     """
     Finding the relative difference in frequency, damping and mode shape between
     a mode and its nearest neighbour.
     Parameters
     ----------
     modes: a dictionary with modes by order
-
+    power: a float number between 0 and 1, to raise the relative difference in the power of
+    neighbour: boolean, True=find the nearest neighbour based on frequency,
+                        False=find nearest neighbour based on mac number.
     Returns: a nx3 ndarray with relative difference in frequency, damping a nd mode shape for each mode.
     -------
     """
@@ -113,7 +138,10 @@ def rel_difference(modes: dict, power: float) -> np.ndarray:
         counter = 0
         for mode in modes_of_order:
             counter += 1
-            neighbour = find_nearest_neighbour(mode, modes[order - 1])
+            if neighbour:
+                neighbour = find_nearest_neighbour(mode, modes[order - 1])
+            else:
+                neighbour = find_nearest_neighbour_mac(mode, modes[order -1])
 
             if (np.isnan(rel_diff_freq(neighbour.f, mode.f))):
                 mode.delta_frequency = 1
